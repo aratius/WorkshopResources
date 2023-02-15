@@ -14,6 +14,7 @@ public class Player {
   PImage[] runImages = new PImage[8];
   PImage[] jumpImages = new PImage[3];
   AnimationType animationType;
+  AnimationType lastType;
   Direction direction;
   int animationIndex;
   float x;
@@ -21,7 +22,7 @@ public class Player {
   float size;
   float animationSpeed;
   float animationStartedTime;
-  boolean shouldReturnIdle;
+  boolean shouldReturnLastState;
   
   Player() {
     x = 0;
@@ -30,7 +31,7 @@ public class Player {
     direction = Direction.right;
     animationIndex = 0;
     animationStartedTime = getTime();
-    shouldReturnIdle = false;
+    shouldReturnLastState = false;
     
     for(int i = 0; i  < idleImages.length; i++) {
        idleImages[i] = loadImage("idle-" + (i+1) + ".png");   
@@ -72,10 +73,10 @@ public class Player {
     animationIndex = (int)(getTime() - animationStartedTime) % images.length;
     
     if(animationType == AnimationType.jump && animationIndex == images.length-1) {
-      shouldReturnIdle = true;
-    } else if(shouldReturnIdle && animationIndex == 0) {
-      toggleAnimation(AnimationType.idle);
-      shouldReturnIdle = false;
+      shouldReturnLastState = true;
+    } else if(shouldReturnLastState && animationIndex == 0) {
+      toggleAnimation(lastType);
+      shouldReturnLastState = false;
     }
   }
   void display() {
@@ -90,6 +91,10 @@ public class Player {
       
   }
   void idle() {
+    if(animationType == AnimationType.jump) {
+      lastType = AnimationType.idle;
+      return;
+    }
    toggleAnimation(AnimationType.idle); 
   }
   void jump() {
@@ -101,6 +106,7 @@ public class Player {
   }
   void toggleAnimation(AnimationType type) {
     if(animationType == type) return;
+    lastType = animationType; 
     animationType = type;
     animationIndex = 0;
     animationStartedTime = getTime();
