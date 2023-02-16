@@ -55,7 +55,7 @@ public class Player {
     characterInfo = _characterInfo;
     state = State.idle;
     size = 128;
-    x = width/2 - size/2;
+    x = width/2;
     y = getBaseY();
     direction = Direction.right;
     animIndex = 0;
@@ -101,7 +101,7 @@ public class Player {
     return (float)millis() / 100 * getAnimationSpeed();
   }
   float getBaseY() {
-    return height - size;
+    return height - size/2;
   }
   void update() {
     float t = getTime() - animStartedTime;
@@ -126,14 +126,15 @@ public class Player {
   }
   void display() {
     PImage[] images = getImages();
+      translate(x - size/2, y - size/2);
     if(direction == Direction.left) {
       scale(-1, 1);
-      image(images[animIndex], -x, y, -size, size);
+      image(images[animIndex], 0, 0, -size, size);
       scale(-1, 1);
     } else {
-      image(images[animIndex], x, y, size, size);
+      image(images[animIndex], 0, 0, size, size);
     }
-      
+    translate(-(x - size/2), -(y - size/2));
   }
   void idle() {
     if(state == State.jump) {
