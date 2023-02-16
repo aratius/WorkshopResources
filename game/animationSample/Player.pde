@@ -98,18 +98,18 @@ public class Player {
   public void display() {
     PImage[] images = _getImages();
     int animIndex = _getAnimIndex();
-    translate(x - size/2, y - size/2);
+    translate(x, y);
     
     // 左向きの場合は画像をflipする
     if(direction == Direction.left) {
       scale(-1, 1);
-      image(images[animIndex], 0, 0, -size, size);
+      image(images[animIndex], size/2, -size/2, -size, size);
       scale(-1, 1);
     } else {
-      image(images[animIndex], 0, 0, size, size);
+      image(images[animIndex], -size/2, -size/2, size, size);
     }
     
-    translate(-(x - size/2), -(y - size/2));
+    translate(-x, -y);
   }
   
   // idleへ遷移
