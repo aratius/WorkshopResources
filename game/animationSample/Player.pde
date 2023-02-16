@@ -53,7 +53,16 @@ public class Player {
   
   Player(CharacterInfo _characterInfo) {
     characterInfo = _characterInfo;
+    state = State.idle;
+    size = 128;
+    x = width/2 - size/2;
+    y = getBaseY();
+    direction = Direction.right;
+    animIndex = 0;
+    animStartedTime = getTime();
+    hasJumped = false;
     
+    // 画像のセット
     idleImages = new PImage[characterInfo.idleImageLength];
     runImages = new PImage[characterInfo.runImageLength];
     jumpImages = new PImage[characterInfo.jumpImageLength];
@@ -66,16 +75,7 @@ public class Player {
     for(int i = 0; i  < jumpImages.length; i++) {
        jumpImages[i] = loadImage(characterInfo.name + "-jump-" + (i+1) + ".png");   
     }
-    
-    state = State.idle;
-    
-    size = 128;
-    x = width/2 - size/2;
-    y = getBaseY();
-    direction = Direction.right;
-    animIndex = 0;
-    animStartedTime = getTime();
-    hasJumped = false;
+
   }
   PImage[] getImages() {
     if(state == State.idle) {
