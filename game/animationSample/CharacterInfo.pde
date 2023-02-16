@@ -2,9 +2,9 @@ import java.util.Map;
 import java.util.HashMap;
 
 // キャラクター固有の情報をまとめたクラス
-// dataフォルダに画像が以下のフォーマットで存在する必要あり（インデックスは1始まり）
+// dataフォルダに画像が以下のフォーマットで存在する必要あり
 // [名前]-[ステート(idle | run | jump)]-[インデックス].png
-// 例) hoodman-run-1.png
+// 例) hoodman-run-5.png
 public class CharacterInfo {
   String name;
   HashMap<State, PImage[]> imageMap = new HashMap<State, PImage[]>();  // 各stateの画像配列
@@ -26,11 +26,11 @@ public class CharacterInfo {
     PImage[] runImages = new PImage[_runImageLength];
     PImage[] jumpImages = new PImage[_jumpImageLength];
     for(int i = 0; i  < idleImages.length; i++) 
-      idleImages[i] = loadImage(name + "-idle-" + (i+1) + ".png");   
+      idleImages[i] = loadImage(name + "-idle-" + i + ".png");   
     for(int i = 0; i  < runImages.length; i++) 
-      runImages[i] = loadImage(name + "-run-" + (i+1) + ".png");   
+      runImages[i] = loadImage(name + "-run-" + i + ".png");   
     for(int i = 0; i  < jumpImages.length; i++) 
-      jumpImages[i] = loadImage(name + "-jump-" + (i+1) + ".png");
+      jumpImages[i] = loadImage(name + "-jump-" + i + ".png");
     
     // 各stateの画像配列をHashMapに保存
     imageMap.put(State.idle, idleImages);
