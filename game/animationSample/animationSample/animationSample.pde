@@ -3,6 +3,7 @@ Player player;
 void setup() {
   size(600, 400);
   player = new Player();
+  player.init();
 }
 
 void draw() { 
