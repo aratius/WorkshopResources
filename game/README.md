@@ -22,4 +22,6 @@ A sample implementation of parallax background.
 
 ## Merged all samples
 
+Parallax implementation of the background image is a bottleneck, so it was implemented with a single image
+
 <img src="https://user-images.githubusercontent.com/59504416/219463726-3ff2f752-b48d-41c6-a4bd-971868ab7248.gif" width="500" />
