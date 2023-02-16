@@ -13,7 +13,7 @@ public class Bg {
   }
   
   public void update() {
-    slideAmount = (sin((float)millis() / 1000) + 1) * .5;    
+        
   }
   
   public void display() {
