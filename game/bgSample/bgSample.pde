@@ -7,6 +7,7 @@ void setup() {
 
 void draw() {
   background(255);
+  bg.slideAmount = (sin((float)millis() / 1000) + 1) * .5;
   bg.update();
   bg.display();
 }
