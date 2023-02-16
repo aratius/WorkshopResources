@@ -2,8 +2,8 @@ Player player;
 
 void setup() {
   size(600, 400);
-   //player = new Player(new CharacterInfo("hoodman", 2, 8, 8, .5, .8, .8));
-  player = new Player(new CharacterInfo("simple", 10, 8, 3, 1, .8, .8));
+   player = new Player(new CharacterInfo("hoodman", 2, 8, 8, .5, .8, .8));
+  //player = new Player(new CharacterInfo("simple", 10, 8, 3, 1, .8, .8));
 }
 
 void draw() { 
