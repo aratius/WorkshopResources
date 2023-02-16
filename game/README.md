@@ -20,6 +20,6 @@ A sample implementation of parallax background.
 
 <img src="https://user-images.githubusercontent.com/59504416/219400421-6e5a0add-a341-4289-81f2-44ffa0252c78.gif" width="500" />
 
-## Merged sample
+## Merged all samples
 
 <img src="https://user-images.githubusercontent.com/59504416/219463726-3ff2f752-b48d-41c6-a4bd-971868ab7248.gif" width="500" />
