@@ -13,7 +13,7 @@ public enum Direction {
  right
 }
 
-AniSequence damagedSeq = new AniSequence(this);
+PApplet global = this;
 
 public class Player {
   
@@ -34,6 +34,8 @@ public class Player {
   private boolean _hasJumped;
   private float _alpha;
   
+  AniSequence _damagedSeq = new AniSequence(global);
+
   // constructor
   public Player(CharacterInfo __characterInfo) {
     _characterInfo = __characterInfo;
@@ -46,12 +48,12 @@ public class Player {
     _hasJumped = false;
     _alpha = 255;
     
-    damagedSeq.beginSequence();
-    damagedSeq.add(Ani.to(this, .1, "_alpha", 0, Ani.LINEAR));
-    damagedSeq.add(Ani.to(this, .1, "_alpha", 255, Ani.LINEAR));
-    damagedSeq.add(Ani.to(this, .1, "_alpha", 0, Ani.LINEAR));
-    damagedSeq.add(Ani.to(this, .1, "_alpha", 255, Ani.LINEAR));
-    damagedSeq.endSequence();
+    _damagedSeq.beginSequence();
+    _damagedSeq.add(Ani.to(this, .1, "_alpha", 0, Ani.LINEAR));
+    _damagedSeq.add(Ani.to(this, .1, "_alpha", 255, Ani.LINEAR));
+    _damagedSeq.add(Ani.to(this, .1, "_alpha", 0, Ani.LINEAR));
+    _damagedSeq.add(Ani.to(this, .1, "_alpha", 255, Ani.LINEAR));
+    _damagedSeq.endSequence();
   }
   
   // 現在のstateのPImage配列を取得
@@ -76,7 +78,7 @@ public class Player {
   }
   
   private float _getBaseY() {
-    return height - size/2;
+    return height - size/2 - 33;
   }
   
   public void update() {
@@ -152,9 +154,9 @@ public class Player {
     _toggleAnimation(State.run);    
   }
   
-  public void receiveDamage() {
-    damagedSeq.start();
-    println("re");
+  public void onIntersect(float damage) {
+    if(damage > 0) _damagedSeq.start();
+    // TODO: 回復の時パーティクルなど
   }
   
   private void _toggleAnimation(State type) {

@@ -14,8 +14,11 @@ public class Items {
     float size = 64;
     float x = random(width);
     float y = -size/2;
-    String name = "item-" + (int)random(3) + ".png";
-    Item item = new Item(name, x, y, size);
+    float seed = random(0.0, 1.0);
+    int index = seed < .8 ? 0 : seed < .9 ? 1 : 2;
+    String name = "item-" + index + ".png";
+    float ability = new float[]{1.0, -2.0, -1.0}[index];
+    Item item = new Item(name, x, y, size, ability);
     _items = (Item[])append(_items, item);
   }
   
