@@ -7,8 +7,8 @@ import java.util.HashMap;
 // 例) hoodman-run-1.png
 public class CharacterInfo {
   String name;
-  HashMap<State, PImage[]> imageMap = new HashMap<State, PImage[]>();
-  HashMap<State, Float> animSpeedMap = new HashMap<State, Float>();
+  HashMap<State, PImage[]> imageMap = new HashMap<State, PImage[]>();  // 各stateのPImage配列
+  HashMap<State, Float> animSpeedMap = new HashMap<State, Float>();  // 各stateのanimationSpeed
   
   public CharacterInfo(
     String _name,  // 名前
