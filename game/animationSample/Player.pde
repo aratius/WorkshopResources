@@ -1,32 +1,7 @@
-public class CharacterInfo {
-  String name;
-  int idleImageLength;
-  int runImageLength;
-  int jumpImageLength;
-  float idleAnimationSpeed;
-  float runAnimationSpeed;
-  float jumpAnimationSpeed;
-  
-  public CharacterInfo(
-    String _name, 
-    int _idleImageLength, 
-    int _runImageLength, 
-    int _jumpImageLength,
-    float _idleAnimationSpeed,
-    float _runAnimationSpeed,
-    float _jumpAnimationSpeed
-  ) {
-    name = _name;
-    idleImageLength = _idleImageLength;
-    runImageLength = _runImageLength;
-    jumpImageLength = _jumpImageLength;
-    idleAnimationSpeed = _idleAnimationSpeed;
-    runAnimationSpeed = _runAnimationSpeed;
-    jumpAnimationSpeed = _jumpAnimationSpeed;
-  }
-} 
+import java.util.Map;
+import java.util.HashMap;
 
-enum State {
+public enum State {
  idle,
  run,
  jump 
@@ -55,6 +30,7 @@ public class Player {
   private float _animStartedTime;
   private boolean _hasJumped;
   
+  // constructor
   public Player(CharacterInfo __characterInfo) {
     _characterInfo = __characterInfo;
     state = State.idle;
@@ -62,55 +38,37 @@ public class Player {
     x = width/2;
     y = _getBaseY();
     direction = Direction.right;
-    _animStartedTime = _getTime();
+    _animStartedTime = _getAnimTime();
     _hasJumped = false;
-    
-    // 画像のセット
-    _idleImages = new PImage[_characterInfo.idleImageLength];
-    _runImages = new PImage[_characterInfo.runImageLength];
-    _jumpImages = new PImage[_characterInfo.jumpImageLength];
-    String name = _characterInfo.name;
-    for(int i = 0; i  < _idleImages.length; i++) 
-       _idleImages[i] = loadImage(name + "-idle-" + (i+1) + ".png");   
-    for(int i = 0; i  < _runImages.length; i++) 
-       _runImages[i] = loadImage(name + "-run-" + (i+1) + ".png");   
-    for(int i = 0; i  < _jumpImages.length; i++) 
-       _jumpImages[i] = loadImage(name + "-jump-" + (i+1) + ".png");   
-
   }
+  
+  // 現在のstateのPImage配列を取得
   private PImage[] _getImages() {
-    if(state == State.idle) {
-       return _idleImages;       
-     } else if(state == State.run) {
-       return _runImages;
-     } else if(state == State.jump) {
-       return _jumpImages;
-     }
-     return _idleImages;
+    return _characterInfo.imageMap.get(state);
   }
+  
+  // 現在のstateのanimationSpeedを取得
   private float _getAnimationSpeed() {
-    if(state == State.idle) {
-       return _characterInfo.idleAnimationSpeed;       
-     } else if(state == State.run) {
-       return _characterInfo.runAnimationSpeed;
-     } else if(state == State.jump) {
-       return _characterInfo.jumpAnimationSpeed;
-     }
-     return 1;
+    return _characterInfo.animSpeedMap.get(state);
   }
-  private float _getTime() {
-    return (float)millis() / 100 * _getAnimationSpeed();
+  
+  // 時間を取得
+  private float _getAnimTime() {
+    return getTime() * _getAnimationSpeed();
   }
+  
   private int _getAnimIndex() {
-    float t = _getTime() - _animStartedTime;
+    float t = _getAnimTime() - _animStartedTime;
     PImage[] images = _getImages();
     return (int)(t) % images.length;
   }
+  
   private float _getBaseY() {
     return height - size/2;
   }
+  
   public void update() {
-    float t = _getTime() - _animStartedTime;
+    float t = _getAnimTime() - _animStartedTime;
     PImage[] images = _getImages();
     int animIndex = _getAnimIndex();
     
@@ -119,6 +77,7 @@ public class Player {
       if(direction == Direction.left) x -= 3;
       else x += 3;
     }
+    
     // jumpが必要なstate
     if(state == State.jump) {
       float jumpAnimProgress = t / (float)images.length;
@@ -134,6 +93,8 @@ public class Player {
       _hasJumped = false;
     }
   }
+  
+  // 描画関数
   public void display() {
     PImage[] images = _getImages();
     int animIndex = _getAnimIndex();
@@ -150,6 +111,8 @@ public class Player {
     
     translate(-(x - size/2), -(y - size/2));
   }
+  
+  // idleへ遷移
   public void idle() {
     // idle中のjumpはjump終わり次第idleに戻るので、stateAfterJumpをidleに
     if(state == State.jump) {
@@ -158,9 +121,13 @@ public class Player {
     }
    _toggleAnimation(State.idle); 
   }
+  
+  // jumpへ遷移
   public void jump() {
     _toggleAnimation(State.jump);
   }
+  
+  // runへ遷移
   public void run(Direction dir) {
     direction = dir; 
     // jump中のrunはjump終わり次第runに遷移するためstateAfterJumpをrunに
@@ -170,10 +137,12 @@ public class Player {
     }
     _toggleAnimation(State.run);    
   }
+  
   private void _toggleAnimation(State type) {
     if(state == type) return;
     _stateAfterJump = state; 
     state = type;
-    _animStartedTime = _getTime();
+    _animStartedTime = _getAnimTime();
   }
+  
 }
