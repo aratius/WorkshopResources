@@ -1,3 +1,30 @@
+class CharacterInfo {
+  String name;
+  int idleImageLength;
+  int runImageLength;
+  int jumpImageLength;
+  float idleAnimationSpeed;
+  float runAnimationSpeed;
+  float jumpAnimationSpeed;
+  
+  CharacterInfo(
+    String _name, 
+    int _idleImageLength, 
+    int _runImageLength, 
+    int _jumpImageLength,
+    float _idleAnimationSpeed,
+    float _runAnimationSpeed,
+    float _jumpAnimationSpeed
+  ) {
+    name = _name;
+    idleImageLength = _idleImageLength;
+    runImageLength = _runImageLength;
+    jumpImageLength = _jumpImageLength;
+    idleAnimationSpeed = _idleAnimationSpeed;
+    runAnimationSpeed = _runAnimationSpeed;
+    jumpAnimationSpeed = _jumpAnimationSpeed;
+  }
+}
 enum State {
  idle,
  run,
@@ -10,9 +37,10 @@ public enum Direction {
 }
 
 public class Player {
-  PImage[] idleImages = new PImage[10];
-  PImage[] runImages = new PImage[8];
-  PImage[] jumpImages = new PImage[3];
+  CharacterInfo characterInfo;
+  PImage[] idleImages;
+  PImage[] runImages;
+  PImage[] jumpImages;
   State state;
   State stateAfterJump;
   Direction direction;
@@ -23,7 +51,24 @@ public class Player {
   float animStartedTime;
   boolean hasJumped;
   
-  Player() {
+  Player(CharacterInfo _characterInfo) {
+    characterInfo = _characterInfo;
+    
+    idleImages = new PImage[characterInfo.idleImageLength];
+    runImages = new PImage[characterInfo.runImageLength];
+    jumpImages = new PImage[characterInfo.jumpImageLength];
+    for(int i = 0; i  < idleImages.length; i++) {
+       idleImages[i] = loadImage(characterInfo.name + "-idle-" + (i+1) + ".png");   
+    }
+    for(int i = 0; i  < runImages.length; i++) {
+       runImages[i] = loadImage(characterInfo.name + "-run-" + (i+1) + ".png");   
+    }
+    for(int i = 0; i  < jumpImages.length; i++) {
+       jumpImages[i] = loadImage(characterInfo.name + "-jump-" + (i+1) + ".png");   
+    }
+    
+    state = State.idle;
+    
     size = 128;
     x = width/2 - size/2;
     y = getBaseY();
@@ -31,18 +76,6 @@ public class Player {
     animIndex = 0;
     animStartedTime = getTime();
     hasJumped = false;
-    
-    for(int i = 0; i  < idleImages.length; i++) {
-       idleImages[i] = loadImage("idle-" + (i+1) + ".png");   
-    }
-    for(int i = 0; i  < runImages.length; i++) {
-       runImages[i] = loadImage("run-" + (i+1) + ".png");   
-    }
-    for(int i = 0; i  < jumpImages.length; i++) {
-       jumpImages[i] = loadImage("jump-" + (i+1) + ".png");   
-    }
-    
-    state = State.idle;
   }
   PImage[] getImages() {
     if(state == State.idle) {
@@ -56,11 +89,11 @@ public class Player {
   }
   float getAnimationSpeed() {
     if(state == State.idle) {
-       return 1;       
+       return characterInfo.idleAnimationSpeed;       
      } else if(state == State.run) {
-       return 1;
+       return characterInfo.runAnimationSpeed;
      } else if(state == State.jump) {
-       return .5;
+       return characterInfo.jumpAnimationSpeed;
      }
      return 1;
   }
