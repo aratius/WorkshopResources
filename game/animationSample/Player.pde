@@ -1,4 +1,4 @@
-class CharacterInfo {
+public class CharacterInfo {
   String name;
   int idleImageLength;
   int runImageLength;
@@ -7,7 +7,7 @@ class CharacterInfo {
   float runAnimationSpeed;
   float jumpAnimationSpeed;
   
-  CharacterInfo(
+  public CharacterInfo(
     String _name, 
     int _idleImageLength, 
     int _runImageLength, 
@@ -24,7 +24,8 @@ class CharacterInfo {
     runAnimationSpeed = _runAnimationSpeed;
     jumpAnimationSpeed = _jumpAnimationSpeed;
   }
-}
+} 
+
 enum State {
  idle,
  run,
@@ -37,128 +38,132 @@ public enum Direction {
 }
 
 public class Player {
-  CharacterInfo characterInfo;
-  PImage[] idleImages;
-  PImage[] runImages;
-  PImage[] jumpImages;
-  State state;
-  State stateAfterJump;
-  Direction direction;
-  int animIndex;
-  float x;
-  float y;
-  float size;
-  float animStartedTime;
-  boolean hasJumped;
   
-  Player(CharacterInfo _characterInfo) {
-    characterInfo = _characterInfo;
+  // public members
+  public State state;
+  public Direction direction;
+  public float x;
+  public float y;
+  public float size;
+  
+  // private members
+  private CharacterInfo _characterInfo;
+  private PImage[] _idleImages;
+  private PImage[] _runImages;
+  private PImage[] _jumpImages;
+  private State _stateAfterJump;
+  private int _animIndex;
+  private float _animStartedTime;
+  private boolean _hasJumped;
+  
+  public Player(CharacterInfo __characterInfo) {
+    _characterInfo = __characterInfo;
     state = State.idle;
     size = 128;
     x = width/2;
-    y = getBaseY();
+    y = _getBaseY();
     direction = Direction.right;
-    animIndex = 0;
-    animStartedTime = getTime();
-    hasJumped = false;
+    _animIndex = 0;
+    _animStartedTime = _getTime();
+    _hasJumped = false;
     
     // 画像のセット
-    idleImages = new PImage[characterInfo.idleImageLength];
-    runImages = new PImage[characterInfo.runImageLength];
-    jumpImages = new PImage[characterInfo.jumpImageLength];
-    for(int i = 0; i  < idleImages.length; i++) {
-       idleImages[i] = loadImage(characterInfo.name + "-idle-" + (i+1) + ".png");   
+    _idleImages = new PImage[_characterInfo.idleImageLength];
+    _runImages = new PImage[_characterInfo.runImageLength];
+    _jumpImages = new PImage[_characterInfo.jumpImageLength];
+    for(int i = 0; i  < _idleImages.length; i++) {
+       _idleImages[i] = loadImage(_characterInfo.name + "-idle-" + (i+1) + ".png");   
     }
-    for(int i = 0; i  < runImages.length; i++) {
-       runImages[i] = loadImage(characterInfo.name + "-run-" + (i+1) + ".png");   
+    for(int i = 0; i  < _runImages.length; i++) {
+       _runImages[i] = loadImage(_characterInfo.name + "-run-" + (i+1) + ".png");   
     }
-    for(int i = 0; i  < jumpImages.length; i++) {
-       jumpImages[i] = loadImage(characterInfo.name + "-jump-" + (i+1) + ".png");   
+    for(int i = 0; i  < _jumpImages.length; i++) {
+       _jumpImages[i] = loadImage(_characterInfo.name + "-jump-" + (i+1) + ".png");   
     }
 
   }
-  PImage[] getImages() {
+  private PImage[] _getImages() {
     if(state == State.idle) {
-       return idleImages;       
+       return _idleImages;       
      } else if(state == State.run) {
-       return runImages;
+       return _runImages;
      } else if(state == State.jump) {
-       return jumpImages;
+       return _jumpImages;
      }
-     return idleImages;
+     return _idleImages;
   }
-  float getAnimationSpeed() {
+  private float getAnimationSpeed() {
     if(state == State.idle) {
-       return characterInfo.idleAnimationSpeed;       
+       return _characterInfo.idleAnimationSpeed;       
      } else if(state == State.run) {
-       return characterInfo.runAnimationSpeed;
+       return _characterInfo.runAnimationSpeed;
      } else if(state == State.jump) {
-       return characterInfo.jumpAnimationSpeed;
+       return _characterInfo.jumpAnimationSpeed;
      }
      return 1;
   }
-  float getTime() {
+  private float _getTime() {
     return (float)millis() / 100 * getAnimationSpeed();
   }
-  float getBaseY() {
+  private float _getBaseY() {
     return height - size/2;
   }
-  void update() {
-    float t = getTime() - animStartedTime;
+  public void update() {
+    float t = _getTime() - _animStartedTime;
     
-    PImage[] images = getImages();
-    animIndex = (int)(t) % images.length;
+    PImage[] images = _getImages();
+    _animIndex = (int)(t) % images.length;
     
-    if(state == State.run || (state == State.jump && stateAfterJump != State.idle)) {
+    if(state == State.run || (state == State.jump && _stateAfterJump != State.idle)) {
       if(direction == Direction.left) x -= 3;
       else x += 3;
     }
     if(state == State.jump) {
-      y = getBaseY() -sin(t / (float)images.length * PI) * 100;       
+      y = _getBaseY() -sin(t / (float)images.length * PI) * 100;       
     }
     
-    if(state == State.jump && animIndex == images.length-1) {
-      hasJumped = true;
-    } else if(hasJumped && animIndex == 0) {
-      toggleAnimation(stateAfterJump);
-      hasJumped = false;
+    if(state == State.jump && _animIndex == images.length-1) {
+      _hasJumped = true;
+    } else if(_hasJumped && _animIndex == 0) {
+      _toggleAnimation(_stateAfterJump);
+      _hasJumped = false;
     }
   }
-  void display() {
-    PImage[] images = getImages();
+  public void display() {
+    PImage[] images = _getImages();
       translate(x - size/2, y - size/2);
     if(direction == Direction.left) {
       scale(-1, 1);
-      image(images[animIndex], 0, 0, -size, size);
+      image(images[_animIndex], 0, 0, -size, size);
       scale(-1, 1);
     } else {
-      image(images[animIndex], 0, 0, size, size);
+      image(images[_animIndex], 0, 0, size, size);
     }
     translate(-(x - size/2), -(y - size/2));
   }
-  void idle() {
+  public void idle() {
     if(state == State.jump) {
-      stateAfterJump = State.idle;
+      _stateAfterJump = State.idle;
       return;
     }
-   toggleAnimation(State.idle); 
+   _toggleAnimation(State.idle); 
   }
-  void jump() {
-    toggleAnimation(State.jump);
+  public void jump() {
+    _toggleAnimation(State.jump);
   }
-  void run(Direction dir) {
+  public void run(Direction dir) {
     direction = dir;
     if(state == State.jump) {
-      stateAfterJump = State.run;
+      _stateAfterJump = State.run;
       return;
     }
-    toggleAnimation(State.run);    
+    _toggleAnimation(State.run);    
   }
-  void toggleAnimation(State type) {
+  private void _toggleAnimation(State type) {
     if(state == type) return;
-    stateAfterJump = state; 
+    _stateAfterJump = state; 
     state = type;
-    animIndex = 0;
-    animStartedTime = getTime();
+    _animIndex = 0;
+    _animStartedTime = _getTime();
   }
 }
