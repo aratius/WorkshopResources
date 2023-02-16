@@ -35,10 +35,17 @@ void draw() {
   if(frameCount % 60 == 0) items.create();
   player.update();
   
+  
   for(int i = 0; i < items.getItems().length; i++) {
     Item item = items.getItems()[i];
+    
+    // 落ち切ったら消す
+    if(item.y > height + item.size/2) items.destroyByIndex(i);
+    
+    // ItemとPlayerの衝突判定
+    // 衝突したらPlayerにダメージ与え、Itemは消す
     float dist = sqrt(pow(item.x - player.x, 2) + pow(item.y - player.y, 2));
-    if(dist < (player.size + item.size) / 2 * .7) {
+    if(dist < (player.size + item.size) / 2 * .7) {  // 割と適当な値
       player.onIntersect(item.damage);
       items.destroyByIndex(i);
       if(item.damage > 0) wiggleScreenSeq.start();

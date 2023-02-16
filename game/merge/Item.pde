@@ -13,7 +13,7 @@ public class Item {
     size = _size;
     damage = _damage;
     _img = loadImage(path);
-    _speed = random(.8, 1.5);
+    _speed = random(1.0, 3.0);
   }
  
   public void update() { 
