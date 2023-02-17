@@ -1,6 +1,7 @@
 import de.looksgood.ani.*;
 
 Player player;
+LifeGauge lifeGauge;
 Items items;
 PImage bg;
 
@@ -12,8 +13,12 @@ void setup() {
   size(600, 500);
   Ani.init(this);
   player = new Player(new CharacterInfo("hoodman", 2, 8, 8, .5, .8, .8));
+  lifeGauge = new LifeGauge();
   items = new Items();
   bg = loadImage("bg.png");
+  
+  lifeGauge.setHpMax(10.0);
+  lifeGauge.resetHp();
   
   wiggleScreenSeq.beginSequence();
   final int animCnt = 10;
@@ -48,6 +53,7 @@ void draw() {
     if(dist < (player.size + item.size) / 2 * .7) {  // 割と適当な値
       player.onIntersect(item.damage);
       items.destroyByIndex(i);
+      lifeGauge.addDamage(item.damage);
       if(item.damage > 0) wiggleScreenSeq.start();
     }
   }
@@ -57,6 +63,7 @@ void draw() {
   items.display();
   player.display();
   translate(-wiggleX, -wiggleY);
+  lifeGauge.display();
 }
 
 void keyPressed() {
