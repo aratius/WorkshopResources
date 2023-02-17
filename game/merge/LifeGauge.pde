@@ -37,7 +37,7 @@ public class LifeGauge {
     rect(x, y, wMax, h);
     if(w / wMax > .3) fill(0, 255, 0);
     else fill(255, 0, 0);
-    rect(x, y, w, h);
+    rect(x + (wMax - w), y, w, h);
   }
   
 }
