@@ -5,7 +5,8 @@ public class LifeGauge {
   private float _hp;
   
   public LifeGauge() {
-    _hp = 0; 
+    _hp = 1; 
+    _hpMax = 1;
   }
   
   public float getHp() {

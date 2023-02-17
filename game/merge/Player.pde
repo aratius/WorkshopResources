@@ -90,6 +90,8 @@ public class Player {
     if(state == State.run || (state == State.jump && _stateAfterJump != State.idle)) {
       if(direction == Direction.left) x -= 3;
       else x += 3;
+      if(x < size/2) x = size/2;
+      else if(x > width - size/2) x = width - size/2;
     }
     
     // jumpが必要なstate
