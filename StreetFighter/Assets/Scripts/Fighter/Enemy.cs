@@ -7,7 +7,7 @@ public class Enemy : Fighter
     // Start is called before the first frame update
     void Start()
     {
-
+        base.Start();
     }
 
 }
