@@ -18,16 +18,18 @@ public class Fighter : MonoBehaviour
 
     protected Rigidbody2D m_RigidBody;
     protected Vector2 m_Velocity = Vector2.zero;
-    protected Vector2 m_VelocityAdditional = Vector2.zero;
+    protected Vector2 m_VelocityImpulse = Vector2.zero;
     protected float m_Direction = 1f;
     protected int m_JumpCnt = 0;
     protected bool m_IsGround = false;
+    protected bool m_IsSitting = false;
 
     bool m_IsFighting = false;  // 戦っているかどうかフラグ
 
     protected void Awake()
     {
         m_RigidBody = GetComponent<Rigidbody2D>();
+        Cameraman.Instance.AddTarget(gameObject);
     }
 
     protected void Start()
@@ -41,8 +43,7 @@ public class Fighter : MonoBehaviour
     }
 
     void FixedUpdate() {
-        m_RigidBody.velocity = new Vector2(m_Velocity.x, m_RigidBody.velocity.y) + m_VelocityAdditional;
-        m_VelocityAdditional = m_VelocityAdditional * .9f;
+        // m_RigidBody.velocity = new Vector2(m_Velocity.x, m_RigidBody.velocity.y);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -52,7 +53,9 @@ public class Fighter : MonoBehaviour
         if(collision.gameObject.tag == "Attack" && !collision.gameObject.Equals(m_Attack.gameObject))
         {
             Vector2 direction = transform.position - collision.gameObject.transform.position;
-            m_VelocityAdditional += (direction + Vector2.up * .15f) * 3f;
+            // m_VelocityImpulse += new Vector2(1f * Mathf.Sign(direction.x), .2f) * 10f;
+            m_RigidBody.AddForce(new Vector2(1f * Mathf.Sign(direction.x), .5f) * 5f, ForceMode2D.Impulse);
+            Cameraman.Instance.Shake();
         }
     }
 
@@ -80,9 +83,16 @@ public class Fighter : MonoBehaviour
         m_Attack.Execute(.3f, .3f);
     }
 
-    public void Run(float direction)
+    public void Run(float input)
     {
+        float vel = input * 100f;
+        Move(vel, 5f);
+    }
 
+    public void Walk(float input)
+    {
+        float vel = input * 100f;
+        Move(vel, 2f);
     }
 
     public void Jump()
@@ -100,7 +110,36 @@ public class Fighter : MonoBehaviour
 
     public void Sit(bool isDown)
     {
-        m_AnimCtrl.SetBool("Sit", isDown);
+        m_IsSitting = isDown;
+        if(isDown)
+        {
+            m_AnimCtrl.SetBool("Stand", false);
+            m_AnimCtrl.SetTrigger("Sit");
+        }
+        else
+        {
+            m_AnimCtrl.SetBool("Stand", true);
+        }
+    }
+
+    void Move(float vel, float max)
+    {
+        if(vel != 0)
+        {
+            if(vel > 0)
+            {
+                m_RigidBody.AddForce(new Vector3(1f, 0f, 0f) * m_RigidBody.mass * vel * UnityEngine.Time.deltaTime, ForceMode2D.Impulse);
+                if(m_RigidBody.velocity.x > max)
+                    m_RigidBody.velocity = new Vector2(max, m_RigidBody.velocity.y);
+            }
+            else
+            {
+                m_RigidBody.AddForce(new Vector3(1f, 0f, 0f) * m_RigidBody.mass * vel * UnityEngine.Time.deltaTime, ForceMode2D.Impulse);
+                if(m_RigidBody.velocity.x < -max)
+                    m_RigidBody.velocity = new Vector2(-max, m_RigidBody.velocity.y);
+            }
+        }
+        m_AnimCtrl.SetFloat("Speed", Mathf.Abs(m_RigidBody.velocity.x));
     }
 
 }

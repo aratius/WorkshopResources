@@ -7,12 +7,14 @@ public class Attack : MonoBehaviour
 {
 
     [SerializeField] float attackPower = 1f;
-    Collider2D m_Collider;
+    BoxCollider2D m_Collider;
+    Vector2 initialSize;
 
     void Awake()
     {
-      m_Collider = GetComponent<Collider2D>();
+      m_Collider = GetComponent<BoxCollider2D>();
       m_Collider.enabled = false;
+      initialSize = m_Collider.size;
     }
 
     public void Execute(float duration, float delay)
@@ -28,11 +30,13 @@ public class Attack : MonoBehaviour
     void On()
     {
       m_Collider.enabled = true;
+      m_Collider.size = initialSize;
     }
 
     void Off()
     {
       m_Collider.enabled = false;
+      m_Collider.size = Vector2.zero;
     }
 
 }
