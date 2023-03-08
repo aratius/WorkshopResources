@@ -178,7 +178,7 @@ MonoBehaviour:
   onDamaged:
     m_PersistentCalls:
       m_Calls: []
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.1462264, b: 0.1462264, a: 1}
   m_GroundChecker: {fileID: 6220337891468407181}
   m_Attack: {fileID: 6712894434730266492}
   m_AnimCtrl: {fileID: 5997410970835906639}
