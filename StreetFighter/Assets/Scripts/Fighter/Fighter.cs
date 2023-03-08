@@ -56,6 +56,7 @@ public class Fighter : MonoBehaviour
             m_IsFreezing = true;
             CancelInvoke("UnFreeze");
             Invoke("UnFreeze", .5f);
+            m_AnimCtrl.SetTrigger("Damaged");
         }
     }
 

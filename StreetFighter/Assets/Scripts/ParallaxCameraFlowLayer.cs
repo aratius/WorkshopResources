@@ -13,9 +13,10 @@ public class ParallaxCameraFlowLayer : MonoBehaviour
     private void Update()
     {
         Vector3 currentPos = _cameraTransfrom.position;
-        var deltaPos = currentPos - _previousCameraPos;
+        Vector3 deltaPos = currentPos - _previousCameraPos;
+        deltaPos = Vector3.Scale(deltaPos, new Vector3(1f, 0f, 1f));  // 当ゲームにおいてyの移動なし
         _previousCameraPos = currentPos;
-        var calcedPos = deltaPos * _followFactor;
+        Vector3 calcedPos = deltaPos * _followFactor;
         transform.AddLocalPos((Vector2)calcedPos);
     }
 }

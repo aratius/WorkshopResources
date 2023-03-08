@@ -48,6 +48,7 @@ public class Enemy : Fighter
             {
                 Run(Mathf.Sign(m_TargetDirection));
             }
+            // TODO: なんもない時うろうろしたい
 
             if(m_Tween != null) m_Tween.Kill();
             m_Tween = DOTween.To(
