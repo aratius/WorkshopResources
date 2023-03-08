@@ -23,6 +23,7 @@ public class Fighter : MonoBehaviour
     protected int m_JumpCnt = 0;
     protected bool m_IsGround = false;
     protected bool m_IsSitting = false;
+    protected bool m_IsFreezing = false;
 
     bool m_IsFighting = false;  // 戦っているかどうかフラグ
 
@@ -42,10 +43,6 @@ public class Fighter : MonoBehaviour
 
     }
 
-    void FixedUpdate() {
-        // m_RigidBody.velocity = new Vector2(m_Velocity.x, m_RigidBody.velocity.y);
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // もし敵の攻撃なら
@@ -56,6 +53,9 @@ public class Fighter : MonoBehaviour
             // m_VelocityImpulse += new Vector2(1f * Mathf.Sign(direction.x), .2f) * 10f;
             m_RigidBody.AddForce(new Vector2(1f * Mathf.Sign(direction.x), .5f) * 5f, ForceMode2D.Impulse);
             Cameraman.Instance.Shake();
+            m_IsFreezing = true;
+            CancelInvoke("UnFreeze");
+            Invoke("UnFreeze", .5f);
         }
     }
 
@@ -80,7 +80,7 @@ public class Fighter : MonoBehaviour
     public void Attack()
     {
         m_AnimCtrl.SetTrigger("Attack");
-        m_Attack.Execute(.3f, .3f);
+        m_Attack.Execute(.1f, .3f);
     }
 
     public void Run(float input)
@@ -124,6 +124,13 @@ public class Fighter : MonoBehaviour
 
     void Move(float vel, float max)
     {
+        float direction = Mathf.Sign(vel);
+        if(vel != 0f) m_Direction = direction;
+        transform.localScale = new Vector3(
+            m_Direction * m_Size,
+            transform.localScale.y,
+            transform.localScale.z
+        );
         if(vel != 0)
         {
             if(vel > 0)
@@ -140,6 +147,11 @@ public class Fighter : MonoBehaviour
             }
         }
         m_AnimCtrl.SetFloat("Speed", Mathf.Abs(m_RigidBody.velocity.x));
+    }
+
+    void UnFreeze()
+    {
+        m_IsFreezing = false;
     }
 
 }

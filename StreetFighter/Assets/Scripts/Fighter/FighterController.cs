@@ -39,6 +39,7 @@ public class FighterController : MonoBehaviour
         GameObject enemyGO = Instantiate(m_EnemyPrefab, transform);
         Enemy enemy = enemyGO.GetComponent<Enemy>();
         enemy.onDamaged.AddListener(OnDamaged);  // EnemyのonDamagedイベントが発火された時に自身のメソッド"OnDamaged"を発火します
+        enemy.AddTarget(player);
         m_Fighters.Add(enemy);
 
     }
