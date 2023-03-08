@@ -129,7 +129,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 5ec13c8c5217c45b0b7032f07043e909, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -178,6 +178,7 @@ MonoBehaviour:
   onDamaged:
     m_PersistentCalls:
       m_Calls: []
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_GroundChecker: {fileID: 6220337891468407181}
   m_Attack: {fileID: 6712894434730266492}
   m_AnimCtrl: {fileID: 5997410970835906639}
