@@ -66,6 +66,16 @@ public class Cameraman : SingletonMonoBehaviour<Cameraman>
   }
 
   /// <summary>
+  /// shock
+  /// </summary>
+  public void Shake()
+  {
+    if (m_CameraTween != null) m_CameraTween.Kill();
+    m_CameraTween = m_ShakeTransform.DOShakePosition(duration: .5f, strength: 0.3f, vibrato: 10, randomness: 100f, snapping: false, fadeOut: true);
+    m_CameraTween.OnComplete(Wiggle);
+  }
+
+  /// <summary>
   /// wiggle
   /// </summary>
   void Wiggle()
@@ -86,16 +96,6 @@ public class Cameraman : SingletonMonoBehaviour<Cameraman>
           ) * range;
       m_ShakeTransform.DOLocalMove(p, .1f);
     });
-  }
-
-  /// <summary>
-  /// shock
-  /// </summary>
-  public void Shake()
-  {
-    if (m_CameraTween != null) m_CameraTween.Kill();
-    m_CameraTween = m_ShakeTransform.DOShakePosition(duration: .5f, strength: 0.3f, vibrato: 10, randomness: 100f, snapping: false, fadeOut: true);
-    m_CameraTween.OnComplete(Wiggle);
   }
 
 }

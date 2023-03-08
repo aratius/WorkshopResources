@@ -34,35 +34,27 @@ public class Enemy : Fighter
         }
       }
 
-      Vector3 direction = nearestTarget.transform.position - transform.position;
-      if (direction.magnitude < 2f)
-      {
-        InvokeAttack();
-      }
+      Vector3 toTargetVec = nearestTarget.transform.position - transform.position;
+      float dist = toTargetVec.magnitude;
+      if (dist < 2f) InvokeAttack();
 
-      if (direction.magnitude < 2f)
-      {
-        Walk(Mathf.Sign(m_TargetDirection));
-      }
-      else if (direction.magnitude < 6f)
-      {
-        Run(Mathf.Sign(m_TargetDirection));
-      }
+      if (dist < 2f) Walk(Mathf.Sign(m_TargetDirection));
+      else if (dist < 6f) Run(Mathf.Sign(m_TargetDirection));
       else
       {
+        // なんもない時適当にうろうろ
         float t = UnityEngine.Time.time;
         float dir = Mathf.Sin(t * .8f) + Mathf.Cos(t * .9f) / 2f;
         float noise = Mathf.Cos(t * .8f) + Mathf.Sin(t * .9f) / 2f;
         if (noise > 0f) Walk((Mathf.Pow(dir, 2f) * Mathf.Sign(dir)));
         else Run((Mathf.Pow(dir, 2f) * Mathf.Sign(dir)));
       }
-      // TODO: なんもない時うろうろしたい
 
       if (m_Tween != null) m_Tween.Kill();
       m_Tween = DOTween.To(
           () => m_TargetDirection,
           v => m_TargetDirection = v,
-          direction.x,
+          toTargetVec.x,
           1f
       );
     }
