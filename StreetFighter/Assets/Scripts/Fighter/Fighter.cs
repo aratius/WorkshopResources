@@ -112,6 +112,7 @@ public class Fighter : MonoBehaviour
       m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, 0f);
       m_RigidBody.AddForce(transform.up * 10f, ForceMode2D.Impulse);
       m_JumpCnt++;
+      EffectContoller.Instance.Occour(EffectType.Jump, transform.position+new Vector3(0, -m_Size/2f, 0));
     }
   }
 

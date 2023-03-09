@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum EffectType
 //エフェクトの文字列にエラーがあった場合返してくれる
+//エフェクトの種類
 {
     Cure,
     Collision,
@@ -11,6 +12,9 @@ public enum EffectType
 }
 
 [System.Serializable]
+/// <summary>
+/// SerializeFieldを呼び出す名前＝Serializable
+/// </summary>
 public struct EffectInfo
 {
     public EffectType type;

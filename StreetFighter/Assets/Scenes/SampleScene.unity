@@ -2094,6 +2094,8 @@ MonoBehaviour:
     prefab: {fileID: 4049980573529634291, guid: 33c6d09cc7eda47da9c9ac70b2d6810e, type: 3}
   - type: 1
     prefab: {fileID: 8806003662545176157, guid: 72d6465c7e37e4368825e8fd925f255c, type: 3}
+  - type: 2
+    prefab: {fileID: 3150510144149220328, guid: f55dd02589ef14835bd360455272596b, type: 3}
 --- !u!4 &987753248
 Transform:
   m_ObjectHideFlags: 0
