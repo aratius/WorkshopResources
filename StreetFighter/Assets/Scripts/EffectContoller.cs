@@ -8,7 +8,8 @@ public enum EffectType
 {
     Cure,
     Collision,
-    Jump
+    Jump,
+    Run
 }
 
 [System.Serializable]
@@ -47,15 +48,15 @@ public class EffectContoller : SingletonMonoBehaviour<EffectContoller>
         }
     }
 
-    
+
     void Start()
     {
-        
+
     }
 
-    
+
     void Update()
     {
-        
+
     }
 }

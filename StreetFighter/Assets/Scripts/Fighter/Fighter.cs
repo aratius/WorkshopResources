@@ -25,6 +25,7 @@ public class Fighter : MonoBehaviour
   protected bool m_IsGround = false;
   protected bool m_IsSitting = false;
   protected bool m_IsFreezing = false;
+  protected bool m_IsRunning = false;
 
   bool m_IsFighting = false;  // 戦っているかどうかフラグ
 
@@ -94,12 +95,15 @@ public class Fighter : MonoBehaviour
   {
     float vel = input * 100f;
     Move(vel, 5f);
+    if(!m_IsRunning) EffectContoller.Instance.Occour(EffectType.Run, transform.position - new Vector3(0f, m_Size / 2f, 0f));
+    m_IsRunning = true;
   }
 
   public void Walk(float input)
   {
     float vel = input * 100f;
     Move(vel, 2f);
+    m_IsRunning = false;
   }
 
   public void Jump()
@@ -113,7 +117,9 @@ public class Fighter : MonoBehaviour
       m_RigidBody.AddForce(transform.up * 10f, ForceMode2D.Impulse);
       m_JumpCnt++;
       EffectContoller.Instance.Occour(EffectType.Jump, transform.position+new Vector3(0, -m_Size/2f, 0));
+      m_IsRunning = false;
     }
+
   }
 
   public void Sit(bool isDown)
@@ -124,6 +130,7 @@ public class Fighter : MonoBehaviour
       m_AnimCtrl.SetBool("Stand", false);
       m_AnimCtrl.SetTrigger("Sit");
       EffectContoller.Instance.Occour(EffectType.Cure, transform.position);
+      m_IsRunning = false;
     }
     else
     {
