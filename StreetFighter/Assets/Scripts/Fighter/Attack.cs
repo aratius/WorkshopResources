@@ -16,7 +16,8 @@ public class Attack : MonoBehaviour
       m_Collider.enabled = false;
       initialSize = m_Collider.size;
     }
-
+    void Start () {
+    }
     public void Execute(float duration, float delay)
     {
       Off();

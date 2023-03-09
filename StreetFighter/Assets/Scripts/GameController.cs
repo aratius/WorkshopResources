@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SoundManager;
 
 public class GameController : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class GameController : MonoBehaviour
   {
     m_FighterController.Prepare();
     m_FighterController.StartFighting();
+
+    Sound.StopAndEffect = 1;
+    Sound.Music = 0;
+
   }
 
   void Update()
