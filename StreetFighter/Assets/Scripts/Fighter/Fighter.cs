@@ -61,6 +61,8 @@ public class Fighter : MonoBehaviour
       CancelInvoke("UnFreeze");
       Invoke("UnFreeze", .5f);
       m_AnimCtrl.SetTrigger("Damaged");
+
+      EffectContoller.Instance.Occour(EffectType.Collision, transform.position);
     }
   }
 
@@ -120,6 +122,7 @@ public class Fighter : MonoBehaviour
     {
       m_AnimCtrl.SetBool("Stand", false);
       m_AnimCtrl.SetTrigger("Sit");
+      EffectContoller.Instance.Occour(EffectType.Cure, transform.position);
     }
     else
     {
