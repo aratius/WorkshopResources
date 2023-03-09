@@ -50,17 +50,19 @@ public class Fighter : MonoBehaviour
   private void OnTriggerEnter2D(Collider2D collision)
   {
     // もし敵の攻撃なら
+    // onDamaged.Invoke(this);  // 発火
     if (collision.gameObject.tag == "Attack" && !collision.gameObject.Equals(m_Attack.gameObject))
     {
-      // onDamaged.Invoke(this);  // 発火
       Vector2 direction = transform.position - collision.gameObject.transform.position;
       // m_VelocityImpulse += new Vector2(1f * Mathf.Sign(direction.x), .2f) * 10f;
       m_RigidBody.AddForce(new Vector2(1f * Mathf.Sign(direction.x), .5f) * 5f, ForceMode2D.Impulse);
       Cameraman.Instance.Shake();
-      m_AnimCtrl.SetTrigger("Damaged");
-      Freeze();
+      m_IsFreezing = true;
       CancelInvoke("UnFreeze");
       Invoke("UnFreeze", .5f);
+      m_AnimCtrl.SetTrigger("Damaged");
+
+      EffectContoller.Instance.Occour(EffectType.Collision, transform.position);
     }
   }
 
@@ -88,16 +90,16 @@ public class Fighter : MonoBehaviour
     m_Attack.Execute(.1f, .3f);
   }
 
-  public void Run(float inputX)
+  public void Run(float input)
   {
-    float velX = inputX * 100f;
-    Move(velX, 5f);
+    float vel = input * 100f;
+    Move(vel, 5f);
   }
 
-  public void Walk(float inputX)
+  public void Walk(float input)
   {
-    float velX = inputX * 100f;
-    Move(velX, 2f);
+    float vel = input * 100f;
+    Move(vel, 2f);
   }
 
   public void Jump()
@@ -110,6 +112,7 @@ public class Fighter : MonoBehaviour
       m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, 0f);
       m_RigidBody.AddForce(transform.up * 10f, ForceMode2D.Impulse);
       m_JumpCnt++;
+      EffectContoller.Instance.Occour(EffectType.Jump, transform.position+new Vector3(0, -m_Size/2f, 0));
     }
   }
 
@@ -120,6 +123,7 @@ public class Fighter : MonoBehaviour
     {
       m_AnimCtrl.SetBool("Stand", false);
       m_AnimCtrl.SetTrigger("Sit");
+      EffectContoller.Instance.Occour(EffectType.Cure, transform.position);
     }
     else
     {
@@ -127,36 +131,31 @@ public class Fighter : MonoBehaviour
     }
   }
 
-  void Move(float velX, float max)
+  void Move(float vel, float max)
   {
-    float direction = Mathf.Sign(velX);
-    if (velX != 0f) m_Direction = direction;
+    float direction = Mathf.Sign(vel);
+    if (vel != 0f) m_Direction = direction;
     transform.localScale = new Vector3(
         m_Direction * m_Size,
         transform.localScale.y,
         transform.localScale.z
     );
-    if (velX != 0)
+    if (vel != 0)
     {
-      if (velX > 0)
+      if (vel > 0)
       {
-        m_RigidBody.AddForce(new Vector3(1f, 0f, 0f) * m_RigidBody.mass * velX * UnityEngine.Time.deltaTime, ForceMode2D.Impulse);
+        m_RigidBody.AddForce(new Vector3(1f, 0f, 0f) * m_RigidBody.mass * vel * UnityEngine.Time.deltaTime, ForceMode2D.Impulse);
         if (m_RigidBody.velocity.x > max)
           m_RigidBody.velocity = new Vector2(max, m_RigidBody.velocity.y);
       }
       else
       {
-        m_RigidBody.AddForce(new Vector3(1f, 0f, 0f) * m_RigidBody.mass * velX * UnityEngine.Time.deltaTime, ForceMode2D.Impulse);
+        m_RigidBody.AddForce(new Vector3(1f, 0f, 0f) * m_RigidBody.mass * vel * UnityEngine.Time.deltaTime, ForceMode2D.Impulse);
         if (m_RigidBody.velocity.x < -max)
           m_RigidBody.velocity = new Vector2(-max, m_RigidBody.velocity.y);
       }
     }
     m_AnimCtrl.SetFloat("Speed", Mathf.Abs(m_RigidBody.velocity.x));
-  }
-
-  void Freeze()
-  {
-    m_IsFreezing = true;
   }
 
   void UnFreeze()
