@@ -35,11 +35,11 @@ public class Enemy : Fighter
       }
 
       Vector3 toTargetVec = nearestTarget.transform.position - transform.position;
-      float dist = toTargetVec.magnitude;
-      if (dist < 2f) InvokeAttack();
+      float distToTarget = toTargetVec.magnitude;
+      if (distToTarget < 2f) InvokeAttack();
 
-      if (dist < 2f) Walk(Mathf.Sign(m_TargetDirection));
-      else if (dist < 6f) Run(Mathf.Sign(m_TargetDirection));
+      if (distToTarget < 2f) Walk(Mathf.Sign(m_TargetDirection));
+      else if (distToTarget < 6f) Run(Mathf.Sign(m_TargetDirection));
       else
       {
         // なんもない時適当にうろうろ
