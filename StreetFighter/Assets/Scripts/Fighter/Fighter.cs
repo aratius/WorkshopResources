@@ -62,7 +62,7 @@ public class Fighter : MonoBehaviour
       Invoke("UnFreeze", .5f);
       m_AnimCtrl.SetTrigger("Damaged");
 
-      EffectContoller.Instance.Occour(EffectType.Collision, transform.position);
+      EffectContoller.Instance.Occour(EffectType.Collision, transform.position+ new Vector3(-m_Size/2f,0,0));
     }
   }
 
