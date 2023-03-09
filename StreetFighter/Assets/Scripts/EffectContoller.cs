@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum EffectType
-//エフェクトの文字列にエラーがあった場合返してくれる
-//エフェクトの種類
 {
     Cure,
     Collision,
@@ -25,7 +23,6 @@ public struct EffectInfo
 public class EffectContoller : SingletonMonoBehaviour<EffectContoller>
 {
 
-    [SerializeField] GameObject m_CureEffectPrefab;
     [SerializeField] List<EffectInfo> m_EffectInfomations;
 
 
@@ -47,13 +44,6 @@ public class EffectContoller : SingletonMonoBehaviour<EffectContoller>
             }
         }
     }
-
-
-    void Start()
-    {
-
-    }
-
 
     void Update()
     {

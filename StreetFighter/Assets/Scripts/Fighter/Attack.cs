@@ -6,7 +6,7 @@ using Cysharp.Threading.Tasks;
 public class Attack : MonoBehaviour
 {
 
-    [SerializeField] float attackPower = 1f;
+    public float power = 1f;
     BoxCollider2D m_Collider;
     Vector2 initialSize;
 
