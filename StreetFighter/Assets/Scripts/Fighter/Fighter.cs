@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using SoundManager;
 
 public class Fighter : MonoBehaviour
 {
 
   public string name = "undefined";
-  public float hp = 1;
-  public UnityEvent<Fighter> onDamaged = new UnityEvent<Fighter>();
+  public float hpMax = 100;
+  public float hp = 100;
+  public UnityEvent<string, float> onChangeHpPercent = new UnityEvent<string, float>();
 
   [SerializeField] Color m_Color;
   [SerializeField] protected GroundChecker m_GroundChecker;
@@ -26,6 +26,7 @@ public class Fighter : MonoBehaviour
   protected bool m_IsGround = false;
   protected bool m_IsSitting = false;
   protected bool m_IsFreezing = false;
+  protected bool m_IsRunning = false;
 
   bool m_IsFighting = false;  // 戦っているかどうかフラグ
 
@@ -53,7 +54,6 @@ public class Fighter : MonoBehaviour
     // もし敵の攻撃なら
     if (collision.gameObject.tag == "Attack" && !collision.gameObject.Equals(m_Attack.gameObject))
     {
-      // onDamaged.Invoke(this);  // 発火
       Vector2 direction = transform.position - collision.gameObject.transform.position;
       // m_VelocityImpulse += new Vector2(1f * Mathf.Sign(direction.x), .2f) * 10f;
       m_RigidBody.AddForce(new Vector2(1f * Mathf.Sign(direction.x), .5f) * 5f, ForceMode2D.Impulse);
@@ -62,6 +62,10 @@ public class Fighter : MonoBehaviour
       Freeze();
       CancelInvoke("UnFreeze");
       Invoke("UnFreeze", .5f);
+      
+      Attack attack = collision.gameObject.GetComponent<Attack>();
+      float power = attack.power;
+      CalcHp(-power);
     }
   }
 
@@ -70,8 +74,10 @@ public class Fighter : MonoBehaviour
   /// </summary>
   public void StartFighting()
   {
-    m_IsFighting = true;
     Debug.Log($"### {name} start fighting");
+    m_IsFighting = true;
+    hp = hpMax;
+    onChangeHpPercent.Invoke(name, hp / hpMax);
   }
 
   /// <summary>
@@ -87,19 +93,21 @@ public class Fighter : MonoBehaviour
   {
     m_AnimCtrl.SetTrigger("Attack");
     m_Attack.Execute(.1f, .3f);
-    Sound.StopAndEffect = 0;
   }
 
   public void Run(float inputX)
   {
-    float velX = inputX * 100f;
-    Move(velX, 5f);
+    float vel = inputX * 100f;
+    Move(vel, 5f);
+    if(!m_IsRunning) EffectContoller.Instance.Occour(EffectType.Run, transform.position - new Vector3(0f, m_Size / 2f, 0f));
+    m_IsRunning = true;
   }
 
   public void Walk(float inputX)
   {
-    float velX = inputX * 100f;
-    Move(velX, 2f);
+    float vel = inputX * 100f;
+    Move(vel, 2f);
+    m_IsRunning = false;
   }
 
   public void Jump()
@@ -112,7 +120,10 @@ public class Fighter : MonoBehaviour
       m_RigidBody.velocity = new Vector2(m_RigidBody.velocity.x, 0f);
       m_RigidBody.AddForce(transform.up * 10f, ForceMode2D.Impulse);
       m_JumpCnt++;
+      EffectContoller.Instance.Occour(EffectType.Jump, transform.position+new Vector3(0, -m_Size/2f, 0));
+      m_IsRunning = false;
     }
+
   }
 
   public void Sit(bool isDown)
@@ -122,6 +133,8 @@ public class Fighter : MonoBehaviour
     {
       m_AnimCtrl.SetBool("Stand", false);
       m_AnimCtrl.SetTrigger("Sit");
+      EffectContoller.Instance.Occour(EffectType.Cure, transform.position);
+      m_IsRunning = false;
     }
     else
     {
@@ -164,6 +177,17 @@ public class Fighter : MonoBehaviour
   void UnFreeze()
   {
     m_IsFreezing = false;
+  }
+
+  /// <summary>
+  /// Caluculate Hp
+  /// </summary>
+  /// <param name="val">if val > 0 cure else damage</param>'
+  void CalcHp(float val)
+  {
+    hp += val;
+    hp = Mathf.Clamp(hp, 0, hpMax);
+    onChangeHpPercent.Invoke(name, hp / hpMax);
   }
 
 }

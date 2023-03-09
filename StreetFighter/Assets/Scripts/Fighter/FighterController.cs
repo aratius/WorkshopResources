@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class FighterController : MonoBehaviour
 {
+
+    public UnityEvent<string> onCreateFighter = new UnityEvent<string>();
+    public UnityEvent<string, float> onChangeHpPercent = new UnityEvent<string, float>();
 
     [SerializeField] GameObject m_PlayerPrefab;  // FighterのPrefab
     [SerializeField] GameObject m_EnemyPrefab;  // FighterのPrefab
@@ -32,16 +36,20 @@ public class FighterController : MonoBehaviour
         // プレイヤー作成
         GameObject playerGO = Instantiate(m_PlayerPrefab, transform);
         Player player = playerGO.GetComponent<Player>();
-        player.onDamaged.AddListener(OnDamaged);  // PlayerのonDamagedイベントが発火された時に自身のメソッド"OnDamaged"を発火します
+        player.name = "player";
+        player.onChangeHpPercent.AddListener(onChangeHpPercent.Invoke);  // PlayerのonDamagedイベントが発火された時に自身のメソッド"onChangeHpPercent"を発火します
         m_Fighters.Add(player);
 
         // 敵作成
         GameObject enemyGO = Instantiate(m_EnemyPrefab, transform);
         Enemy enemy = enemyGO.GetComponent<Enemy>();
-        enemy.onDamaged.AddListener(OnDamaged);  // EnemyのonDamagedイベントが発火された時に自身のメソッド"OnDamaged"を発火します
+        enemy.name = "enemy";
+        enemy.onChangeHpPercent.AddListener(onChangeHpPercent.Invoke);  // EnemyのonDamagedイベントが発火された時に自身のメソッド"onChangeHpPercent"を発火します
         enemy.AddTarget(player);
         m_Fighters.Add(enemy);
 
+        onCreateFighter.Invoke(player.name);
+        onCreateFighter.Invoke(enemy.name);
     }
 
     /// <summary>
@@ -66,9 +74,5 @@ public class FighterController : MonoBehaviour
         }
     }
 
-    void OnDamaged(Fighter fighter)
-    {
-
-    }
 
 }

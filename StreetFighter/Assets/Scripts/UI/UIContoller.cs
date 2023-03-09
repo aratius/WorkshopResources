@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class UIContoller : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField]GaugeUIManager m_GaugeManager;
+
+    public void CreateFigher(string name)
     {
-        
+        m_GaugeManager.Create(name);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetGauge(string name, float percent)
     {
-        
+        m_GaugeManager.Set(name, percent);
     }
+    
 }
